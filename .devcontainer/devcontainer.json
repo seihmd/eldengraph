@@ -1,0 +1,29 @@
+{
+    "name": "eldengraph",
+    "forwardPorts": [
+        7474,
+        7687,
+        3000,
+        5173
+    ],
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "postCreateCommand": "pnpm config set store-dir /tmp/pnpm/store && pnpm install",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "biomejs.biome",
+                "folke.vscode-monorepo-workspace"
+            ],
+            "settings": {
+                "editor.codeActionsOnSave": {
+                    "source.addMissingImports": "explicit",
+                    "quickfix.biome": "explicit",
+                    "source.organizeImports.biome": "explicit"
+                },
+            }
+        }
+    },
+}
