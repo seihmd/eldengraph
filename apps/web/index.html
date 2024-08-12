@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.yellow.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eldengraph</title>
+</head>
+
+<body>
+  <div id="root" class="container-fluid"></div>
+  <script type="module">
+    import init, * as oxigraph from './node_modules/oxigraph/web.js'
+
+    (async function () {
+      await init();
+
+      const store = new oxigraph.Store();
+      const ex = oxigraph.namedNode("http://example/");
+      const schemaName = oxigraph.namedNode("http://schema.org/name");
+      store.add(oxigraph.triple(ex, schemaName, oxigraph.literal("example")));
+      for (const binding of store.query("SELECT ?name WHERE { <http://example/> <http://schema.org/name> ?name }")) {
+        console.log(binding.get("name").value);
+      }
+
+      window.global = { oxigraphStore: store, oxigraph };
+    })()
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
