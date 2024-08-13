@@ -3,6 +3,9 @@
   "keywords": [],
   "author": "seihmd",
   "license": "MIT",
+  "scripts": {
+    "build": "pnpm --filter web build"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@types/node": "^20.14.11"
