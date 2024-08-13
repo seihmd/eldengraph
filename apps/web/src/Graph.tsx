@@ -1,3 +1,4 @@
+import { useState } from "react";
 import ForceGraph2D from "react-force-graph-2d";
 
 type Props = {
@@ -18,8 +19,12 @@ interface Link {
 }
 
 export function Graph({ nodes, links, onNodeClick }: Props) {
+	const [cooldownTicks, setCooldownTicks] = useState(350);
+
 	return (
 		<ForceGraph2D
+			cooldownTicks={cooldownTicks}
+			onEngineStop={() => setCooldownTicks(50)}
 			backgroundColor={"black"}
 			graphData={{ nodes, links }}
 			linkDirectionalArrowLength={3}

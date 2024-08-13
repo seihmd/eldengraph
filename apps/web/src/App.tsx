@@ -158,23 +158,30 @@ function Documents({
 			}}
 		>
 			<div
-				style={{ position: "fixed", right: "20px", cursor: "pointer" }}
+				style={{
+					position: "fixed",
+					right: "20px",
+					cursor: "pointer",
+					padding: "10px",
+				}}
 				onClick={onClose}
 			>
 				☓
 			</div>
-			<h3
-				style={{
-					cursor: "pointer",
-					textDecoration: "underline",
-					color: "#00ffe0",
-				}}
-				onClick={() => {
-					onTitleClick(nodeValue);
-				}}
-			>
-				{nodeValue}
-			</h3>
+			<div style={{ display: "flex" }}>
+				<h3
+					style={{
+						cursor: "pointer",
+						textDecoration: "underline",
+						color: "#00ffe0",
+					}}
+					onClick={() => {
+						onTitleClick(nodeValue);
+					}}
+				>
+					{nodeValue}
+				</h3>
+			</div>
 			{docs.map((doc, i) => {
 				const [subject, text] = doc.split(":");
 
