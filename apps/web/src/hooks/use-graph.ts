@@ -14,7 +14,7 @@ export function useGraph() {
                     ?n2 ${asIRI("value")} ?value2 .
                     ?n2 ${asIRI("label")} ?label2 .
                     FILTER regex(?value, "${q}") .
-                } LIMIT 1000`,
+                } LIMIT 100`,
             );
 
             const nodes = new Map();

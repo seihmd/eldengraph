@@ -1,11 +1,16 @@
-import { useState } from "react";
+import {
+	type KeyboardEvent,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { Graph } from "./Graph";
 import { useGraph } from "./hooks/use-graph";
 import { query } from "./utils/rdf";
 
 function App() {
 	const graph = useGraph();
-	const [q, setQ] = useState("");
 	const [elements, setElements] = useState([[], []]);
 	const [documents, setDocuments] = useState<{
 		nodeValue: string;
@@ -14,48 +19,37 @@ function App() {
 
 	setTimeout(() => {
 		graph.load();
-	}, 500);
+	}, 100);
 
 	return (
 		<>
-			<div className="grid">
-				<h4>Eldengraph</h4>
-				{/* <Debug /> */}
-				<form>
-					<div style={{ display: "flex", columnGap: "5px" }}>
-						<input
-							type="search"
-							value={q}
-							onChange={(e) => setQ(e.target.value)}
-						/>
-
-						<button
-							style={{ width: "100px" }}
-							type="submit"
-							disabled={q === ""}
-							onClick={(e) => {
-								e.preventDefault();
-								if (q === "") {
-									return;
-								}
-
-								setElements(graph.query1Step(q));
-							}}
-						>
-							表示
-						</button>
-					</div>
-				</form>
-			</div>
-
-			<div style={{ width: "100%", height: "60vh" }}>
-				<Graph
-					nodes={elements[0]}
-					links={elements[1]}
-					onNodeClick={(nodeIRI) => {
-						setDocuments(graph.findDocuments(nodeIRI));
-					}}
-				/>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					height: "100vh",
+					overflow: "hidden",
+				}}
+			>
+				<div>
+					<Header
+						onSearch={(q) => {
+							setElements(graph.query1Step(q));
+						}}
+						onClickEscape={() => {
+							setDocuments(null);
+						}}
+					/>
+				</div>
+				<div style={{ width: "100%" }}>
+					<Graph
+						nodes={elements[0]}
+						links={elements[1]}
+						onNodeClick={(nodeIRI) => {
+							setDocuments(graph.findDocuments(nodeIRI));
+						}}
+					/>
+				</div>
 			</div>
 			<Documents
 				documents={documents}
@@ -71,6 +65,68 @@ function App() {
 }
 
 export default App;
+
+function Header({
+	onSearch,
+	onClickEscape,
+}: { onSearch: (q: string) => void; onClickEscape: () => void }) {
+	const [q, setQ] = useState("");
+	const ref = useRef(null);
+
+	const escFunction = useCallback((event: KeyboardEvent) => {
+		if (event.key === "Escape") {
+			onClickEscape();
+		}
+		if ((event.metaKey || event.ctrlKey) && event.code === "KeyK") {
+			if (ref.current) {
+				ref.current.focus();
+			}
+		}
+	}, []);
+
+	useEffect(() => {
+		document.addEventListener("keydown", escFunction, false);
+
+		return () => {
+			document.removeEventListener("keydown", escFunction, false);
+		};
+	}, [escFunction]);
+
+	return (
+		<div className="grid" style={{ marginTop: "20px" }}>
+			<h4 style={{ marginLeft: "20px" }}>Eldengraph</h4>
+			{/* <Debug /> */}
+			<form>
+				<div style={{ display: "flex", columnGap: "5px" }}>
+					<input
+						ref={ref}
+						style={{ height: "20px" }}
+						type="search"
+						value={q}
+						onChange={(e) => setQ(e.target.value)}
+						placeholder="Ctl+ K"
+					/>
+
+					<button
+						style={{ width: "100px", height: "28px", padding: 0 }}
+						type="submit"
+						disabled={q === ""}
+						onClick={(e) => {
+							e.preventDefault();
+							if (q === "") {
+								return;
+							}
+
+							onSearch(q);
+						}}
+					>
+						表示
+					</button>
+				</div>
+			</form>
+		</div>
+	);
+}
 
 function Documents({
 	documents,
@@ -91,8 +147,9 @@ function Documents({
 		<article
 			style={{
 				position: "fixed",
+				bottom: 0,
 				width: "100%",
-				maxHeight: "200px",
+				maxHeight: "500px",
 				overflow: "scroll",
 				background: "black",
 				opacity: "0.8",

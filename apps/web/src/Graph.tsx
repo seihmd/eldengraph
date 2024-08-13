@@ -1,5 +1,4 @@
 import ForceGraph2D from "react-force-graph-2d";
-import { useGraph } from "./hooks/use-graph";
 
 type Props = {
 	nodes: Node[];
@@ -19,15 +18,13 @@ interface Link {
 }
 
 export function Graph({ nodes, links, onNodeClick }: Props) {
-	const { findDocuments } = useGraph();
-
 	return (
 		<ForceGraph2D
 			backgroundColor={"black"}
 			graphData={{ nodes, links }}
-			linkDirectionalArrowLength={1}
+			linkDirectionalArrowLength={3}
 			linkDirectionalArrowRelPos={1}
-			linkCurvature={0.1}
+			linkCurvature={0.2}
 			nodeId="id"
 			nodeAutoColorBy="label"
 			nodeCanvasObjectMode={() => "after"}
@@ -40,9 +37,9 @@ export function Graph({ nodes, links, onNodeClick }: Props) {
 				ctx.fillText(node.text, node.x, node.y + 10);
 			}}
 			nodeVal={(node) => {
-				return node.label === "Document" ? 0.01 : 5;
+				return node.label === "Document" ? 0.01 : 0.5;
 			}}
-			linkAutoColorBy="1"
+			linkAutoColorBy={(l) => l.source}
 			linkCanvasObjectMode={() => "after"}
 			linkCanvasObject={(rel, ctx, globalScale) => {
 				const { x: srcX, y: srcY } = rel.source;
