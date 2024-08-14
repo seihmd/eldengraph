@@ -7,7 +7,7 @@ import {
 } from "react";
 import { Graph } from "./Graph";
 import { useGraph } from "./hooks/use-graph";
-import { query } from "./utils/rdf";
+import { getRandomNodeValue, query } from "./utils/rdf";
 
 function App() {
 	const graph = useGraph();
@@ -35,6 +35,9 @@ function App() {
 					<Header
 						onSearch={(q) => {
 							setElements(graph.query1Step(q));
+						}}
+						onRandom={() => {
+							setElements(graph.query1Step(getRandomNodeValue()));
 						}}
 						onClickEscape={() => {
 							setDocuments(null);
@@ -68,8 +71,13 @@ export default App;
 
 function Header({
 	onSearch,
+	onRandom,
 	onClickEscape,
-}: { onSearch: (q: string) => void; onClickEscape: () => void }) {
+}: {
+	onSearch: (q: string) => void;
+	onRandom: () => void;
+	onClickEscape: () => void;
+}) {
 	const [q, setQ] = useState("");
 	const ref = useRef(null);
 
@@ -96,6 +104,13 @@ function Header({
 		<div className="grid" style={{ marginTop: "20px" }}>
 			<h4 style={{ marginLeft: "20px" }}>Eldengraph</h4>
 			{/* <Debug /> */}
+
+			<button
+				style={{ width: "100px", height: "28px", padding: 0 }}
+				onClick={onRandom}
+			>
+				ランダム
+			</button>
 			<form>
 				<div style={{ display: "flex", columnGap: "5px" }}>
 					<input

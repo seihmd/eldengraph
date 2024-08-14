@@ -39,7 +39,7 @@ export function Graph({ nodes, links, onNodeClick }: Props) {
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
 				ctx.fillStyle = "white";
-				ctx.fillText(node.text, node.x, node.y + 10);
+				ctx.fillText(node.text, node.x, node.y + 5);
 			}}
 			nodeVal={(node) => {
 				return node.label === "Document" ? 0.01 : 0.5;

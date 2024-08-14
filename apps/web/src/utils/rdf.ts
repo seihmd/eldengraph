@@ -45,3 +45,13 @@ export function loadRDF() {
 function getStore(): Store {
     return (window.global as unknown as { oxigraphStore: Store })?.oxigraphStore;
 }
+
+export function getRandomNodeValue(): string {
+    while (true) {
+        const node = allNodes[Math.floor(Math.random() * (allNodes.length - 1))];
+
+        if (node.labels !== 'Document') {
+            return node.value;
+        }
+    }
+}
